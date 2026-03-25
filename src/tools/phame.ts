@@ -144,9 +144,8 @@ export function registerPhameTools(server: McpServer, client: ConduitClient) {
       if (params.subtitle !== undefined) {
         transactions.push({ type: 'subtitle', value: params.subtitle });
       }
-      if (params.visibility !== undefined) {
-        transactions.push({ type: 'visibility', value: params.visibility });
-      }
+      // Phabricator expects visibility as a string; default to draft ("0") when not provided
+      transactions.push({ type: 'visibility', value: String(params.visibility ?? 0) });
       if (params.addSubscriberPHIDs !== undefined) {
         transactions.push({ type: 'subscribers.add', value: params.addSubscriberPHIDs });
       }
@@ -184,7 +183,7 @@ export function registerPhameTools(server: McpServer, client: ConduitClient) {
         transactions.push({ type: 'body', value: params.body });
       }
       if (params.visibility !== undefined) {
-        transactions.push({ type: 'visibility', value: params.visibility });
+        transactions.push({ type: 'visibility', value: String(params.visibility) });
       }
       if (params.blogPHID !== undefined) {
         transactions.push({ type: 'blog', value: params.blogPHID });
