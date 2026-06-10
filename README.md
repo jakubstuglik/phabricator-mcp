@@ -194,6 +194,7 @@ Add to your `~/.claude/settings.json`:
       "mcp__phabricator__phabricator_blog_post_search",
       "mcp__phabricator__phabricator_file_search",
       "mcp__phabricator__phabricator_file_info",
+      "mcp__phabricator__phabricator_file_download",
       "mcp__phabricator__phabricator_buildable_search",
       "mcp__phabricator__phabricator_build_search",
       "mcp__phabricator__phabricator_build_target_search",
@@ -309,6 +310,7 @@ To allowlist all tools including write operations, use `"mcp__phabricator__*"` i
 | `phabricator_file_upload` | Upload a file and get an ID for embedding in descriptions/comments via `{F<id>}` |
 | `phabricator_file_search` | Search for files |
 | `phabricator_file_info` | Get file metadata (name, size, MIME type, URI) |
+| `phabricator_file_download` | Download file to local disk (writes raw bytes and returns the absolute path). Agent can specify `output_path`. Respects `byteLimit` (tooHuge case). |
 
 ### Builds (Harbormaster)
 
@@ -375,6 +377,7 @@ Once connected, just ask your AI assistant to perform Phabricator tasks in natur
 - "Set the start date and root cause category on T12345"
 - "Make T456 a subtask of T123"
 - "Upload this screenshot and add it to the description of T789"
+- "Download attachment F123 from T456 and summarize the image"
 
 **Code Reviews**
 - "Show my open diffs"
@@ -426,6 +429,52 @@ npm run dev  # watch mode
 - `src/config.ts` - Config loader (reads `~/.arcrc` or env vars)
 - `src/client/conduit.ts` - Phabricator Conduit API client
 - `src/tools/*.ts` - Tool implementations per Phabricator application
+
+### Running the fork locally (for development / team use, without publishing to npm)
+
+After cloning and `npm install`:
+
+```bash
+cd C:\GitRepos\phabricator-mcp   # or your fork path
+npm run build
+```
+
+Then point your MCP client config at the local build (avoids npx @freelancercom/...):
+
+**Using built JS (recommended for stability):**
+
+```json
+{
+  "mcpServers": {
+    "phabricator": {
+      "command": "node",
+      "args": ["C:\\GitRepos\\phabricator-mcp\\dist\\index.js"],
+      "env": {
+        "PHABRICATOR_URL": "https://phabricator.example.com",
+        "PHABRICATOR_API_TOKEN": "api-xxxxxxxxxxxxx"
+      }
+    }
+  }
+}
+```
+
+**Using tsx directly on source (for active dev, matches `npm run dev`):**
+
+```json
+{
+  "mcpServers": {
+    "phabricator": {
+      "command": "npx",
+      "args": ["--yes", "tsx", "C:\\GitRepos\\phabricator-mcp\\src\\index.ts"],
+      "env": { ... }
+    }
+  }
+}
+```
+
+The server will still read `~/.arcrc` if the env vars are not provided (the node process inherits user home).
+
+Restart your AI client / TUI after changing MCP server paths.
 
 ## License
 

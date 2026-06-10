@@ -9,7 +9,7 @@
   <link rel="canonical" href="https://freelancer.github.io/phabricator-mcp/">
 
   <meta property="og:title" content="phabricator-mcp">
-  <meta property="og:description" content="MCP server that lets AI assistants talk to Phabricator. 59 tools for tasks, diffs, repos, wikis.">
+  <meta property="og:description" content="MCP server that lets AI assistants talk to Phabricator. 60 tools for tasks, diffs, repos, wikis.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://freelancer.github.io/phabricator-mcp/">
 
@@ -20,7 +20,7 @@
     "name": "phabricator-mcp",
     "applicationCategory": "DeveloperApplication",
     "operatingSystem": "Cross-platform",
-    "description": "An open-source MCP (Model Context Protocol) server that connects AI assistants to Phabricator's Conduit API, enabling natural language interaction with tasks, code reviews, repositories, and wikis. Includes raw diff fetching for AI-powered code reviews, transaction history for reading comments and audit trails, custom field support for task subtypes, and file uploads for embedding images in descriptions and comments.",
+    "description": "An open-source MCP (Model Context Protocol) server that connects AI assistants to Phabricator's Conduit API, enabling natural language interaction with tasks, code reviews, repositories, and wikis. Includes raw diff fetching for AI-powered code reviews, transaction history for reading comments and audit trails, custom field support for task subtypes, and file upload/download for attachments (base64 content for images/docs in tasks etc).",
     "url": "https://freelancer.github.io/phabricator-mcp/",
     "downloadUrl": "https://github.com/freelancer/phabricator-mcp",
     "author": { "@type": "Organization", "name": "Freelancer", "url": "https://github.com/freelancer" },
@@ -40,7 +40,7 @@
         "name": "What is phabricator-mcp?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "phabricator-mcp is an open-source MCP (Model Context Protocol) server that connects AI assistants like Claude, ChatGPT, and GitHub Copilot to Phabricator. It provides 59 tools covering task management (Maniphest), code reviews (Differential) including raw diff fetching, repositories (Diffusion), wikis (Phriction), and more."
+          "text": "phabricator-mcp is an open-source MCP (Model Context Protocol) server that connects AI assistants like Claude, ChatGPT, and GitHub Copilot to Phabricator. It provides 60 tools covering task management (Maniphest), code reviews (Differential) including raw diff fetching, repositories (Diffusion), wikis (Phriction), and more."
         }
       },
       {
@@ -64,7 +64,7 @@
         "name": "What Phabricator features does phabricator-mcp support?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "phabricator-mcp provides 59 tools covering: Maniphest (task search, create, edit, comment, custom fields, status/priority discovery), Differential (revision search, edit, accept/reject, inline comments, diff search, changeset search, raw diffs), Diffusion (repository and commit search, file browsing, file content, code search), Projects (search, create/edit, workboard columns), Phriction (wiki search, edit, comment), Pastes (search, create, edit), Phame (blog search, create, edit), Harbormaster (build/CI status, build logs, build commands), Owners (code ownership search), Transactions (comment and history search), Files (upload, search, info), Conpherence (search, create, edit, read, send), and PHID utilities."
+          "text": "phabricator-mcp provides 60 tools covering: Maniphest (task search, create, edit, comment, custom fields, status/priority discovery), Differential (revision search, edit, accept/reject, inline comments, diff search, changeset search, raw diffs), Diffusion (repository and commit search, file browsing, file content, code search), Projects (search, create/edit, workboard columns), Phriction (wiki search, edit, comment), Pastes (search, create, edit), Phame (blog search, create, edit), Harbormaster (build/CI status, build logs, build commands), Owners (code ownership search), Transactions (comment and history search), Files (upload, search, info, download-to-disk with controllable path), Conpherence (search, create, edit, read, send), and PHID utilities."
         }
       }
     ]
@@ -424,7 +424,7 @@ You have 3 open revisions:<br>
         </div>
       </div>
 
-      <h2>59 tools across 15 Phabricator apps</h2>
+      <h2>60 tools across 15 Phabricator apps</h2>
 
       <div class="tools-grid">
         <div class="tool-group">
@@ -488,7 +488,7 @@ You have 3 open revisions:<br>
           <h4>Files</h4>
           <ul>
             <li><code>file_upload</code> &middot; <code>file_search</code></li>
-            <li><code>file_info</code></li>
+            <li><code>file_info</code> &middot; <code>file_download</code></li>
           </ul>
         </div>
         <div class="tool-group">
@@ -599,6 +599,7 @@ PHABRICATOR_API_TOKEN=api-xxxxx</code></pre>
       "mcp__phabricator__phabricator_blog_post_search",
       "mcp__phabricator__phabricator_file_search",
       "mcp__phabricator__phabricator_file_info",
+      "mcp__phabricator__phabricator_file_download",
       "mcp__phabricator__phabricator_buildable_search",
       "mcp__phabricator__phabricator_build_search",
       "mcp__phabricator__phabricator_build_target_search",
@@ -633,7 +634,7 @@ PHABRICATOR_API_TOKEN=api-xxxxx</code></pre>
 
       <details>
         <summary>Can it modify tasks and revisions, or is it read-only?</summary>
-        <p>Both. You can search, create, edit, and comment on tasks (including custom fields), revisions, wiki pages, blog posts, and more. 59 tools total.</p>
+        <p>Both. You can search, create, edit, and comment on tasks (including custom fields), revisions, wiki pages, blog posts, and more. 60 tools total.</p>
       </details>
 
       <details>
