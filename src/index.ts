@@ -11,6 +11,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const pkg = JSON.parse(readFileSync(join(__dirname, '..', 'package.json'), 'utf-8'));
 
 async function main() {
+  console.error(`🚀 Phabricator MCP v${pkg.version} ready - waiting for stdio MCP client`);
   const config = loadConfig();
   const client = new ConduitClient(config);
 
