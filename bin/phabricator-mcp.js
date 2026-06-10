@@ -3,19 +3,15 @@
 /**
  * bin/phabricator-mcp.js
  * 
- * This is the entry point for \
-px -y github:jakubstuglik/phabricator-mcp\.
- * npx will run this when the package is fetched from git.
- * 
- * It uses tsx (from dependencies) to run the TypeScript source directly (src/index.ts).
- * This allows running the latest source from the fork without a separate build step in the command.
- * 
- * The relative import works because this runs from within the installed package directory.
+ * This bin allows npx -y github:jakubstuglik/phabricator-mcp to run the server from source.
+ * npx fetches the git repo, npm installs (builds if needed), runs this bin.
+ * This script uses tsx (in dependencies) to execute src/index.ts directly.
+ * Relative paths resolve correctly inside the installed package tree.
  */
 
 import('tsx/esm').then(() => {
   import('../src/index.ts');
 }).catch((err) => {
-  console.error('Failed to load with tsx:', err);
+  console.error('Failed to load source with tsx:', err);
   process.exit(1);
 });
