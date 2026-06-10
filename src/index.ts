@@ -7,13 +7,10 @@ import { loadConfig } from './config.js';
 import { ConduitClient } from './client/conduit.js';
 import { registerAllTools } from './tools/index.js';
 
-console.error("📍 src/index.ts loaded - starting main()");
-
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const pkg = JSON.parse(readFileSync(join(__dirname, '..', 'package.json'), 'utf-8'));
 
 async function main() {
-  console.error("🚀 Entering main() - loading config...");
   const config = loadConfig();
   const client = new ConduitClient(config);
 

@@ -1,6 +1,6 @@
 {
-  "name": "@freelancercom/phabricator-mcp",
-  "version": "2.0.19",
+  "name": "@jakubstuglik/phabricator-mcp",
+  "version": "2.0.20",
   "description": "MCP server for Phabricator Conduit API - manage tasks, code reviews, repositories, and more",
   "type": "module",
   "main": "dist/index.js",
@@ -14,10 +14,11 @@
   ],
   "scripts": {
     "build": "tsc",
-    "prepare": "echo 'Skipping build in npx github mode'",
-    "postinstall": "echo 'postinstall done'",
+    "prepare": "npm run build",
     "start": "node dist/index.js",
-    "dev": "tsx --watch src/index.ts"
+    "dev": "tsx --watch src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
   },
   "exports": {
     ".": "./src/index.ts"
@@ -30,16 +31,16 @@
     "ai",
     "llm"
   ],
-  "author": "Laurent Goudet",
+  "author": "Jakub Stuglik",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/freelancer/phabricator-mcp.git"
+    "url": "git+https://github.com/jakubstuglik/phabricator-mcp.git"
   },
   "bugs": {
-    "url": "https://github.com/freelancer/phabricator-mcp/issues"
+    "url": "https://github.com/jakubstuglik/phabricator-mcp/issues"
   },
-  "homepage": "https://github.com/freelancer/phabricator-mcp#readme",
+  "homepage": "https://github.com/jakubstuglik/phabricator-mcp#readme",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
     "zod": "^3.23.0",
