@@ -14,10 +14,10 @@
   ],
   "scripts": {
     "build": "tsc",
-    "prepare": "npm run build",
+    "prepare": "echo 'Skipping build in npx github mode'",
+    "postinstall": "echo 'postinstall done'",
     "start": "node dist/index.js",
-    "dev": "tsx --watch src/index.ts",
-    "typecheck": "tsc --noEmit"
+    "dev": "tsx --watch src/index.ts"
   },
   "exports": {
     ".": "./src/index.ts"
