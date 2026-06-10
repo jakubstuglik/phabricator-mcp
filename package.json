@@ -1,12 +1,15 @@
 {
   "name": "@jstuglik/phabricator-mcp",
-  "version": "2.0.21",
+  "version": "2.0.22",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
     "phabricator-mcp": "bin/phabricator-mcp.js"
   },
-  "files": ["bin", "dist"],
+  "files": [
+    "bin",
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "prepare": "npm run build",
