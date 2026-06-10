@@ -9,12 +9,14 @@
  * Relative paths resolve correctly inside the installed package tree.
  */
 
+console.error("🚀 Starting Phabricator MCP server from GitHub...");
+
 import('tsx/esm')
     .then(() => {
-      return import('../src/index.ts');
+        return import('../src/index.ts');
     })
     .catch((err) => {
-      console.error('Failed to start Phabricator MCP server:');
-      console.error(err);
-      process.exit(1);
+        console.error('❌ Failed to start Phabricator MCP:');
+        console.error(err);
+        process.exit(1);
     });
