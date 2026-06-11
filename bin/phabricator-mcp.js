@@ -1,9 +1,7 @@
 ﻿#!/usr/bin/env node
 
-import('tsx/esm')
-    .then(() => import('../src/index.ts'))
-    .catch((err) => {
-        console.error('❌ Failed to start Phabricator MCP server:');
-        console.error(err);
-        process.exit(1);
-    });
+import('../dist/index.js').catch((err) => {
+    console.error('❌ Failed to start @jstuglik/phabricator-mcp:');
+    console.error(err);
+    process.exit(1);
+});
