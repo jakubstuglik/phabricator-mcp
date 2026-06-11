@@ -6,10 +6,7 @@
   "bin": {
     "phabricator-mcp": "bin/phabricator-mcp.js"
   },
-  "files": [
-    "bin",
-    "dist"
-  ],
+  "files": ["bin", "dist", "src"],
   "scripts": {
     "build": "tsc",
     "prepare": "npm run build",
