@@ -2,27 +2,59 @@ import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import type { ConduitClient } from '../client/conduit.js';
 import { z } from 'zod';
 import { jsonCoerce } from './coerce.js';
-import { mkdir, writeFile, stat } from 'node:fs/promises';
-import { join, resolve, dirname } from 'node:path';
+import { mkdir, writeFile, stat, readFile } from 'node:fs/promises';
+import { join, resolve, dirname, basename } from 'node:path';
 import { tmpdir } from 'node:os';
 
 export function registerFileTools(server: McpServer, client: ConduitClient) {
-  // Upload a file
+  // Upload a file (from a local path, or base64 as a fallback)
   server.tool(
     'phabricator_file_upload',
-    'Upload a file to Phabricator. Returns a file PHID that can be used with phabricator_file_info to get the file ID for embedding in Remarkup via {F<id>}.',
+    'Upload a file to Phabricator. Prefer path (the MCP server reads the file from disk) over data_base64 — do not paste large base64 into the tool call. Returns file metadata including numeric id and Remarkup {F<id>} for embedding in comments.',
     {
-      name: z.string().optional().describe('Filename with extension (e.g. "screenshot.png")'),
-      data_base64: z.string().describe('Base64-encoded file content'),
+      name: z.string().optional().describe('Filename with extension (e.g. "screenshot.png"). Defaults to the basename of path when path is set.'),
+      path: z.string().optional().describe('Absolute local filesystem path. The MCP server reads the file and uploads it. Preferred over data_base64 for screenshots and any file already on disk.'),
+      data_base64: z.string().optional().describe('Base64-encoded file content. Only use when the bytes are not on disk. Prefer path.'),
       viewPolicy: z.string().optional().describe('File visibility policy (e.g., "public", "users", or a custom policy PHID)'),
       canCDN: z.boolean().optional().describe('Whether the file can be served over CDN (for public assets)'),
     },
     async (params) => {
+      if (!params.path && !params.data_base64) {
+        throw new Error('Provide either "path" (local file) or "data_base64". Prefer path so the MCP server reads the file from disk.');
+      }
+
+      let dataBase64: string;
+      let name = params.name;
+      let uploadedFrom: string | undefined;
+
+      if (params.path) {
+        uploadedFrom = resolve(params.path);
+        let fileStat;
+        try {
+          fileStat = await stat(uploadedFrom);
+        } catch (err: any) {
+          if (err?.code === 'ENOENT') {
+            throw new Error(`File not found: ${uploadedFrom}`);
+          }
+          throw err;
+        }
+        if (!fileStat.isFile()) {
+          throw new Error(`Not a file: ${uploadedFrom}`);
+        }
+        const buf = await readFile(uploadedFrom);
+        dataBase64 = buf.toString('base64');
+        if (!name) {
+          name = basename(uploadedFrom);
+        }
+      } else {
+        dataBase64 = params.data_base64 as string;
+      }
+
       const apiParams: Record<string, unknown> = {
-        data_base64: params.data_base64,
+        data_base64: dataBase64,
       };
-      if (params.name !== undefined) {
-        apiParams.name = params.name;
+      if (name !== undefined) {
+        apiParams.name = name;
       }
       if (params.viewPolicy !== undefined) {
         apiParams.viewPolicy = params.viewPolicy;
@@ -30,8 +62,25 @@ export function registerFileTools(server: McpServer, client: ConduitClient) {
       if (params.canCDN !== undefined) {
         apiParams.canCDN = params.canCDN;
       }
+
       const phid = await client.call<string>('file.upload', apiParams);
-      return { content: [{ type: 'text', text: phid }] };
+
+      let info: Record<string, unknown> = { phid };
+      try {
+        info = await client.call<Record<string, unknown>>('file.info', { phid });
+      } catch {
+        // file.info is best-effort so a successful upload still returns the PHID
+      }
+
+      const id = info.id;
+      const result = {
+        ...info,
+        phid: info.phid ?? phid,
+        remarkup: id != null ? `{F${id}}` : undefined,
+        uploadedFrom,
+      };
+
+      return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
     },
   );
 

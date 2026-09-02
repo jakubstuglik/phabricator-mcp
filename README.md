@@ -307,7 +307,7 @@ To allowlist all tools including write operations, use `"mcp__phabricator__*"` i
 
 | Tool | Description |
 |------|-------------|
-| `phabricator_file_upload` | Upload a file and get an ID for embedding in descriptions/comments via `{F<id>}` |
+| `phabricator_file_upload` | Upload a file. Prefer `path` (MCP server reads the file from disk) over `data_base64`. Returns metadata including numeric id and Remarkup `{F<id>}` |
 | `phabricator_file_search` | Search for files |
 | `phabricator_file_info` | Get file metadata (name, size, MIME type, URI) |
 | `phabricator_file_download` | Download file to local disk (writes raw bytes and returns the absolute path). Agent can specify `output_path`. Respects `byteLimit` (tooHuge case). |
@@ -376,7 +376,7 @@ Once connected, just ask your AI assistant to perform Phabricator tasks in natur
 - "What custom fields are available for incident tasks?"
 - "Set the start date and root cause category on T12345"
 - "Make T456 a subtask of T123"
-- "Upload this screenshot and add it to the description of T789"
+- "Upload C:\\shots\\before.png onto T789" (uses `path`; do not paste base64)
 - "Download attachment F123 from T456 and summarize the image"
 
 **Code Reviews**
