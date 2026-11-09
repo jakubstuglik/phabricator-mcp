@@ -4,3 +4,8 @@ dist/
 *.log
 .DS_Store
 docs/plans/
+.grok/config.toml
+.idea/
+*.iml
+*.ipr
+*.iws
